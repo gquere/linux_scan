@@ -116,16 +116,6 @@ do
         if [ -e "$path" ]
         then
             ls -la "$path"
-
-            # file is a symlink, attempt to dereference it
-            if [ -L "$path" ]
-            then
-                target=$(readlink -f "$path")
-                if [ -e "$target" ]
-                then
-                    ls -la "$target"
-                fi
-            fi
         else
             echo "$path does not exist"
         fi
