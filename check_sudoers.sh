@@ -128,23 +128,6 @@ do
             fi
         else
             echo "$path does not exist"
-
-            # find last existing path
-            loop_control=0
-            while [ "$path" != "/" ]
-            do
-                path=$(dirname $path)
-                if [ -d "$path" ]
-                then
-                    ls -lad "$path"
-                    path="/"
-                fi
-                loop_control=$((loop_control+1))
-                if [ $loop_control -gt 5 ]
-                then
-                    break
-                fi
-            done
         fi
     done
 done
