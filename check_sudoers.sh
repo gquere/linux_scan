@@ -52,7 +52,7 @@ grep '\$' /etc/shadow | cut -c -40
 md5_passes=$(grep -c '\$1' /etc/shadow)
 if [ "$md5_passes" -ne 0 ]
 then
-    echo "WARNING"
+    echo "WARNING: MD5"
 fi
 
 subtitle "Users with empty passwords"
@@ -61,7 +61,7 @@ do
     pass=$(echo "$line" | cut -d':' -f2)
     if [ -z "$pass" ]
     then
-        echo "WARNING"
+        echo "WARNING: Empty pass"
         echo $line
     fi
 done < /etc/shadow
@@ -143,7 +143,7 @@ do
             file_owner=$(ls -l "$path" | cut -d' ' -f3)
             if [ "$file_owner" = "$user" ]
             then
-                echo "WARNING"
+                echo "WARNING: File rights"
             fi
         else
             echo "$path does not exist"
