@@ -61,6 +61,7 @@ do
     pass=$(echo "$line" | cut -d':' -f2)
     if [ -z "$pass" ]
     then
+        echo "WARNING"
         echo $line
     fi
 done < /etc/shadow
