@@ -35,6 +35,13 @@ subtitle()
 }
 
 
+# MACHINE BASIC INFORMATION ####################################################
+title "Machine info"
+hostname
+uname -a
+uptime
+
+
 # LOCAL USERS ##################################################################
 title "Local users"
 subtitle "All local users"
