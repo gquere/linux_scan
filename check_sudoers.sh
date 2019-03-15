@@ -49,6 +49,11 @@ getent passwd
 
 subtitle "Users with passwords"
 grep '\$' /etc/shadow | cut -c -40
+md5_passes=$(grep -c '\$1' /etc/shadow)
+if [ "$md5_passes" -ne 0 ]
+then
+    echo "WARNING"
+fi
 
 subtitle "Users with empty passwords"
 while read -r line
