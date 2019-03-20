@@ -96,7 +96,7 @@ do
     fi
 
     user=$(echo "$md5_match" | cut -d':' -f1)
-    echo "WARNING: User $user has a MD5 hashed password: $md5_match"
+    echo "WARNING: $hostname: User $user has a MD5 hashed password: $md5_match"
 done < /etc/shadow
 
 # check if users have empty passwords
@@ -106,11 +106,10 @@ do
     if [ -z "$pass" ]
     then
         user=$(echo "$line" | cut -d':' -f1)
-        echo "WARNING: User $user has an empty pass: $line"
+        echo "WARNING: $hostname: User $user has an empty pass: $line"
     fi
 done < /etc/shadow
 
-exit 0
 
 # SUDO CONFIGURATION ###########################################################
 title "$(ls -la /etc/sudoers)" "$(md5sum /etc/sudoers)"
@@ -187,7 +186,7 @@ do
         # check if path contains a wildcard
         if [[ "$path" == *"*"* ]]
         then
-            echo "WARNING: User $user can run sudo with a path wildcard: $path"
+            echo "WARNING: $hostname: User $user can run sudo with a path wildcard: $path"
             # TODO: maybe check rights of expanded path insted of continue'ing
             continue
         fi
@@ -195,7 +194,7 @@ do
         # check if path exists
         if ! [ -e "$path" ]
         then
-            echo "WARNING: User $user can run a sudo command that does not exist: $path"
+            echo "WARNING: $hostname: User $user can run a sudo command that does not exist: $path"
             continue
         fi
 
@@ -210,7 +209,7 @@ do
         # check world permissions
         if [ $(($file_perms & 0002)) -ne 0 ]
         then
-            echo "WARNING: Anyone can write to sudo'ed file: $file_perms_hr $path"
+            echo "WARNING: $hostname: Anyone can write to sudo'ed file: $file_perms_hr $path"
         fi
 
         # check group permissions
@@ -218,13 +217,13 @@ do
         user_in_group=$?
         if [ $(($file_perms & 0020)) -ne 0 -a "$user_in_group" -eq 1 ]
         then
-            echo "WARNING: Group can write to sudo'ed file: $file_perms_hr $path"
+            echo "WARNING: $hostname: Group can write to sudo'ed file: $file_perms_hr $path"
         fi
 
         # check owner permissions
         if [ "$file_owner" = "$user" ]
         then
-            echo "WARNING: User $user can write to sudo'ed file: $file_perms_hr $path"
+            echo "WARNING: $hostname: User $user can write to sudo'ed file: $file_perms_hr $path"
         fi
     done
 done
