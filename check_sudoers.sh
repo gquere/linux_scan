@@ -49,11 +49,14 @@ getent passwd
 
 subtitle "Users with passwords"
 grep '\$' /etc/shadow | cut -c -40
-md5_passes=$(grep -c '\$1' /etc/shadow)
-if [ "$md5_passes" -ne 0 ]
-then
-    echo "WARNING: MD5"
-fi
+
+while read -r line
+do
+    md5_match=$(grep ':\$1\$' $line)
+    user=$(echo "$md5_match" | cut -d':' -f1)
+    echo "WARNING: User $user has a MD5 hashed password"
+    echo "$md5_match"
+done < /etc/shadow
 
 subtitle "Users with empty passwords"
 while read -r line
