@@ -7,7 +7,7 @@ then
 fi
 
 
-# UTILS ########################################################################
+# DISPLAY UTILS ################################################################
 title()
 {
     echo
@@ -143,6 +143,14 @@ do
 
     for path in "${paths_array[@]}"
     do
+        # check if path contains a wildcard
+        if [[ "$path" == *"*"* ]]
+        then
+            echo "WARNING: User $user can run sudo with a path wildcard: $path"
+            # TODO: maybe check rights of expanded path insted of continue'ing
+            continue
+        fi
+
         if [ -e "$path" ]
         then
             ls -la "$path"
@@ -153,7 +161,7 @@ do
                 echo "WARNING: User $user can write to sudo'ed file: $file_rights $path"
             fi
         else
-            echo "WARNING: $path does not exist"
+            echo "WARNING: User $user can run a sudo command that does not exist: $path"
         fi
     done
 done
