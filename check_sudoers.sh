@@ -195,6 +195,12 @@ do
             # drop arguments if any
             com=$(echo "$com" | cut -d' ' -f1)
 
+            if [ "$com" = "ALL" ]
+            then
+                echo "WARNING: $hostname: User $user can run ALL commands"
+                continue
+            fi
+
             if [[ "$com" =~ ^/ ]]
             then
                 paths_array+=("$com")
