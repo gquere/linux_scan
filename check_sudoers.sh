@@ -75,6 +75,7 @@ check_if_group_can_write()
 # Return: 1 if command is forbidden, 0 otherwise
 check_if_command_is_forbidden()
 {
+    # list from https://gtfobins.github.io/
     forbidden_commands=('apt-get' 'apt' 'ash' 'awk' 'bash' 'busybox' 'cpan' 'cpulimit' 'csh' 'dash' 'easy_install' 'ed' 'emacs' 'env' 'expect' 'facter' 'find' 'flock' 'ftp' 'gdb' 'gimp' 'git' 'ionice' 'irb' 'jjs' 'journalctl' 'jrunscript' 'ksh' 'ld.so' 'less' 'logsave' 'ltrace' 'lua' 'mail' 'make' 'man' 'more' 'mysql' 'nano' 'nice' 'nmap' 'node' 'perl' 'pg' 'php' 'pic' 'pico' 'pip' 'puppet' 'python' 'rlwrap' 'rpm' 'rpmquery' 'rsync' 'ruby' 'run-mailcap' 'run-parts' 'rvim' 'scp' 'screen' 'script' 'sed' 'setarch' 'sftp' 'sh' 'smbclient' 'sqlite3' 'ssh' 'start-stop-daemon' 'stdbuf' 'strace' 'tar' 'taskset' 'tclsh' 'telnet' 'time' 'timeout' 'unshare' 'vi' 'vim' 'watch' 'wish' 'xargs' 'zip' 'zsh' 'zypper')
 
     user_command=$1
