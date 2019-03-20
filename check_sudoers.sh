@@ -35,6 +35,41 @@ subtitle()
 }
 
 
+# CHECK FILE PERMISSIONS #######################################################
+# Param1: username
+# Param2: group to check if user is a part of
+# Return 1 if user is in group, 0 otherwise
+check_if_user_in_group()
+{
+    user=$1
+    group=$2
+    user_groups=($(groups "$user" | cut -d':' -f2))
+
+    for user_group in "${user_groups[@]}"
+    do
+        if [ "$group" = "$user_group" ]
+        then
+            return 1
+        fi
+    done
+
+    return 0
+}
+
+# Param1: file rights
+# Return 1 if group can write to file, 0 otherwise
+check_if_group_can_write()
+{
+    rights=$1
+    if [ ${rights:5:1} == "w" ]
+    then
+        return 1
+    fi
+
+    return 0
+}
+
+
 # MACHINE BASIC INFORMATION ####################################################
 title "Machine info"
 hostname
@@ -151,17 +186,39 @@ do
             continue
         fi
 
-        if [ -e "$path" ]
+        # check if path exists
+        if ! [ -e "$path" ]
         then
-            ls -la "$path"
-            file_owner=$(ls -l "$path" | cut -d' ' -f3)
-            if [ "$file_owner" = "$user" ]
-            then
-                file_rights=$(ls -l "$path" | cut -d' ' -f1)
-                echo "WARNING: User $user can write to sudo'ed file: $file_rights $path"
-            fi
-        else
             echo "WARNING: User $user can run a sudo command that does not exist: $path"
+            continue
+        fi
+
+        ls -la "$path"
+
+        file_info=($(stat -L -c "0%a %A %U %G" $path))
+        file_perms=${file_info[0]}
+        file_perms_hr=${file_info[1]}
+        file_owner=${file_info[2]}
+        file_group=${file_info[3]}
+
+        # check world permissions
+        if (( ($file_perms & 0002) != 0 ))
+        then
+            echo "WARNING: Anyone can write to sudo'ed file: $file_perms_hr $path"
+        fi
+
+        # check group permissions
+        check_if_user_in_group "$user" "$file_group"
+        user_in_group=$?
+        if [ $(($file_perms & 0020)) -ne 0 -a "$user_in_group" -eq 1 ]
+        then
+            echo "WARNING: Group can write to sudo'ed file: $file_perms_hr $path"
+        fi
+
+        # check owner permissions
+        if [ "$file_owner" = "$user" ]
+        then
+            echo "WARNING: User $user can write to sudo'ed file: $file_perms_hr $path"
         fi
     done
 done
