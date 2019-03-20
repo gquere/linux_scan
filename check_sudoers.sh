@@ -72,7 +72,8 @@ check_if_group_can_write()
 
 # MACHINE BASIC INFORMATION ####################################################
 title "Machine info"
-hostname
+hostname=$(hostname)
+echo "$hostname"
 uname -a
 uptime
 
@@ -85,26 +86,31 @@ getent passwd
 subtitle "Users with passwords"
 grep '\$' /etc/shadow | cut -c -40
 
+# check if users have MD5 passwords
 while read -r line
 do
-    md5_match=$(grep ':\$1\$' $line)
+    md5_match=$(echo $line | grep ':\$1\$')
+    if [ -z "$md5_match" ]
+    then
+        continue
+    fi
+
     user=$(echo "$md5_match" | cut -d':' -f1)
-    echo "WARNING: User $user has a MD5 hashed password"
-    echo "$md5_match"
+    echo "WARNING: User $user has a MD5 hashed password: $md5_match"
 done < /etc/shadow
 
-subtitle "Users with empty passwords"
+# check if users have empty passwords
 while read -r line
 do
     pass=$(echo "$line" | cut -d':' -f2)
     if [ -z "$pass" ]
     then
-        user=$(echo "$pass" | cut -d':' -f1)
-        echo "WARNING: User $user has an empty pass"
-        echo "$line"
+        user=$(echo "$line" | cut -d':' -f1)
+        echo "WARNING: User $user has an empty pass: $line"
     fi
 done < /etc/shadow
 
+exit 0
 
 # SUDO CONFIGURATION ###########################################################
 title "$(ls -la /etc/sudoers)" "$(md5sum /etc/sudoers)"
