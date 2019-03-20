@@ -64,8 +64,9 @@ do
     pass=$(echo "$line" | cut -d':' -f2)
     if [ -z "$pass" ]
     then
-        echo "WARNING: Empty pass"
-        echo $line
+        user=$(echo "$pass" | cut -d':' -f1)
+        echo "WARNING: User $user has an empty pass"
+        echo "$line"
     fi
 done < /etc/shadow
 
