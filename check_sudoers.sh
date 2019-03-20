@@ -248,14 +248,15 @@ check_sudo()
                 continue
             fi
 
-            ls -la "$path"
-
             # check if path exists
             if ! [ -e "$path" ]
             then
+                echo "$path"
                 echo "WARNING: $hostname: User $user can run a sudo command that does not exist: $path"
                 continue
             fi
+
+            ls -la "$path"
 
             file_info=($(stat -L -c "0%a %A %U %G" $path))
             file_perms=${file_info[0]}
