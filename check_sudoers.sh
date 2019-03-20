@@ -202,7 +202,7 @@ do
         file_group=${file_info[3]}
 
         # check world permissions
-        if (( ($file_perms & 0002) != 0 ))
+        if [ $(($file_perms & 0002)) -ne 0 ]
         then
             echo "WARNING: Anyone can write to sudo'ed file: $file_perms_hr $path"
         fi
