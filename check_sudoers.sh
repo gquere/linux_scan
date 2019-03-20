@@ -161,19 +161,22 @@ display_sudo_configuration()
     title "$(ls -la /etc/sudoers)" "$(md5sum /etc/sudoers)"
     grep -v '^#' /etc/sudoers | grep -v '^$'
 
-    title "$(ls -lad /etc/sudoers.d/)"
-
-    if [ -n "$(ls -A /etc/sudoers.d)" ]
+    if [ -d /etc/sudoers.d/ ]
     then
-        for file in /etc/sudoers.d/*
-        do
-            file_permissions=$(ls -la "$file")
-            file_hash=$(md5sum "$file")
-            subtitle "$file_permissions" "$file_hash"
-            grep -v '^#' "$file" | grep -v '^$'
-        done
-    else
-        echo "Directory is empty"
+        title "$(ls -lad /etc/sudoers.d/)"
+
+        if [ -n "$(ls -A /etc/sudoers.d)" ]
+        then
+            for file in /etc/sudoers.d/*
+            do
+                file_permissions=$(ls -la "$file")
+                file_hash=$(md5sum "$file")
+                subtitle "$file_permissions" "$file_hash"
+                grep -v '^#' "$file" | grep -v '^$'
+            done
+        else
+            echo "Directory is empty"
+        fi
     fi
 
     title "Applied configuration"
