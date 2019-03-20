@@ -117,15 +117,17 @@ do
     #     path3
     # Therefore it has to be read line by line, then split by commas, then the
     # command must be cleaned of leading and trailing chars around the path
-    # Current limitation: will not scan commands like "(user) /path/"
     paths_array=()
     while read line
     do
         IFS=',' read -ra commands <<< "$line"
         for com in "${commands[@]}"
         do
-            # remove leading whitespaces if any
+            # remove leading whitespace if any
             com=$(echo "$com" | sed -e 's/^ //')
+
+            # remove leading group if any
+            com=$(echo "$com" | sed -e 's/^([a-z]*) //')
 
             # drop arguments if any
             com=$(echo "$com" | cut -d' ' -f1)
