@@ -149,10 +149,11 @@ do
             file_owner=$(ls -l "$path" | cut -d' ' -f3)
             if [ "$file_owner" = "$user" ]
             then
-                echo "WARNING: File rights"
+                file_rights=$(ls -l "$path" | cut -d' ' -f1)
+                echo "WARNING: User $user can write to sudo'ed file: $file_rights $path"
             fi
         else
-            echo "$path does not exist"
+            echo "WARNING: $path does not exist"
         fi
     done
 done
