@@ -70,6 +70,28 @@ check_if_group_can_write()
 }
 
 
+# FORBIDDEN COMMANDS ###########################################################
+# Param1: command to check
+# Return: 1 if command is forbidden, 0 otherwise
+check_if_command_is_forbidden()
+{
+    forbidden_commands=('apt-get' 'apt' 'ash' 'awk' 'bash' 'busybox' 'cpan' 'cpulimit' 'csh' 'dash' 'easy_install' 'ed' 'emacs' 'env' 'expect' 'facter' 'find' 'flock' 'ftp' 'gdb' 'gimp' 'git' 'ionice' 'irb' 'jjs' 'journalctl' 'jrunscript' 'ksh' 'ld.so' 'less' 'logsave' 'ltrace' 'lua' 'mail' 'make' 'man' 'more' 'mysql' 'nano' 'nice' 'nmap' 'node' 'perl' 'pg' 'php' 'pic' 'pico' 'pip' 'puppet' 'python' 'rlwrap' 'rpm' 'rpmquery' 'rsync' 'ruby' 'run-mailcap' 'run-parts' 'rvim' 'scp' 'screen' 'script' 'sed' 'setarch' 'sftp' 'sh' 'smbclient' 'sqlite3' 'ssh' 'start-stop-daemon' 'stdbuf' 'strace' 'tar' 'taskset' 'tclsh' 'telnet' 'time' 'timeout' 'unshare' 'vi' 'vim' 'watch' 'wish' 'xargs' 'zip' 'zsh' 'zypper')
+
+    user_command=$1
+    user_command=$(basename "$user_command")
+
+    for forbidden_command in "${forbidden_commands[@]}"
+    do
+        if [ "$user_command" = "$forbidden_command" ]
+        then
+            return 1
+        fi
+    done
+
+    return 0
+}
+
+
 # MACHINE BASIC INFORMATION ####################################################
 title "Machine info"
 hostname=$(hostname)
@@ -224,6 +246,14 @@ do
         if [ "$file_owner" = "$user" ]
         then
             echo "WARNING: $hostname: User $user can write to sudo'ed file: $file_perms_hr $path"
+        fi
+
+        # check if command can elevate to root
+        check_if_command_is_forbidden $path
+        forbidden=$?
+        if [ "$forbidden" -eq 1 ]
+        then
+            echo "WARNING: $hostname: User $user can run forbidden command $path"
         fi
     done
 done
