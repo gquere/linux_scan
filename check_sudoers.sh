@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERBOSE=1
+VERBOSE=0
 
 if [ "$EUID" -ne 0 ]
 then
@@ -158,6 +158,11 @@ check_local_users_passwords()
 # SUDO CONFIGURATION ###########################################################
 display_sudo_configuration()
 {
+    if [ "$VERBOSE" -eq 0 ]
+    then
+        return
+    fi
+
     title "$(ls -la /etc/sudoers)" "$(md5sum /etc/sudoers)"
     grep -v '^#' /etc/sudoers | grep -v '^$'
 
@@ -302,7 +307,7 @@ display_machine_information
 display_local_users
 check_local_users_passwords
 
-verbose || display_sudo_configuration
+display_sudo_configuration
 check_sudo
 
 title "Done"
