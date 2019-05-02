@@ -286,7 +286,7 @@ check_sudo()
             fi
 
             # check if command can elevate to root
-            check_if_command_is_forbidden $path
+            check_if_command_is_forbidden "$path"
             forbidden=$?
             if [ "$forbidden" -eq 1 ]
             then
