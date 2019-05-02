@@ -68,19 +68,6 @@ check_if_user_in_group()
     return 0
 }
 
-# Param1: file rights
-# Return 1 if group can write to file, 0 otherwise
-check_if_group_can_write()
-{
-    rights=$1
-    if [ ${rights:5:1} == "w" ]
-    then
-        return 1
-    fi
-
-    return 0
-}
-
 
 # FORBIDDEN COMMANDS ###########################################################
 # Param1: command to check
