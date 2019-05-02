@@ -100,6 +100,15 @@ display_machine_information()
     echo "$hostname"
     uname -a
     uptime
+
+    title "Installed packages"
+    if [ -f /etc/redhat-release ]
+    then
+        rpm -qa
+    elif [ -f /etc/debian_version ]
+    then
+        dpkg -l --no-pager
+    fi
 }
 
 
