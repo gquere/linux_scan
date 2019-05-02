@@ -266,7 +266,7 @@ check_sudo()
             file_group=${file_info[3]}
 
             # check world permissions
-            if [ $(($file_perms & 0002)) -ne 0 ]
+            if [ $((file_perms & 0002)) -ne 0 ]
             then
                 echo "WARNING: $hostname: Anyone can write to sudo'ed file: $file_perms_hr $path"
             fi
@@ -274,7 +274,7 @@ check_sudo()
             # check group permissions
             check_if_user_in_group "$user" "$file_group"
             user_in_group=$?
-            if [ $(($file_perms & 0020)) -ne 0 -a "$user_in_group" -eq 1 ]
+            if [ $((file_perms & 0020)) -ne 0 ] && [ "$user_in_group" -eq 1 ]
             then
                 echo "WARNING: $hostname: Group can write to sudo'ed file: $file_perms_hr $path"
             fi
