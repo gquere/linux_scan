@@ -55,9 +55,9 @@ check_if_user_in_group()
 {
     user=$1
     group=$2
-    user_groups=($(groups "$user" | cut -d':' -f2))
+    user_groups_array=($(groups "$user" | cut -d':' -f2))
 
-    for user_group in "${user_groups[@]}"
+    for user_group in "${user_groups_array[@]}"
     do
         if [ "$group" = "$user_group" ]
         then
