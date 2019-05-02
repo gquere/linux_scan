@@ -297,6 +297,24 @@ check_sudo()
 }
 
 
+# MOUNTPOINTS ##################################################################
+check_mountpoints()
+{
+    title "Mount points"
+
+    mount
+
+    nfs_shares=$(mount | grep "type nfs" | grep -v "vers=4")
+    if [ ! -z "$nfs_shares" ]
+    then
+        while read -r line
+        do
+            echo "WARNING: $hostname has deprecated NFS mounts: $line"
+        done <<< "$nfs_shares"
+    fi
+}
+
+
 # MAIN #########################################################################
 display_machine_information
 
@@ -305,6 +323,8 @@ check_local_users_passwords
 
 display_sudo_configuration
 check_sudo
+
+check_mountpoints
 
 title "Done"
 exit 0
