@@ -128,7 +128,7 @@ check_local_users_passwords()
     # check if users have MD5 passwords
     while read -r line
     do
-        md5_match=$(echo $line | grep ':\$1\$')
+        md5_match=$(echo "$line" | grep ':\$1\$')
         if [ -z "$md5_match" ]
         then
             continue
