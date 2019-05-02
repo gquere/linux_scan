@@ -209,7 +209,7 @@ check_sudo()
         # Therefore it has to be read line by line, then split by commas, then the
         # command must be cleaned of leading and trailing chars around the path
         paths_array=()
-        while read line
+        while read -r line
         do
             IFS=',' read -ra commands <<< "$line"
             for com in "${commands[@]}"
